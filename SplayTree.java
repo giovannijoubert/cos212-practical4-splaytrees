@@ -31,7 +31,6 @@ public class SplayTree<T extends Comparable<T>> {
 		if(root.key.compareTo(key) == 1)
 			return contains(root.left, key);
 		
-		// right subtree recurion
 		return contains(root.right, key);
 	}
 
@@ -118,72 +117,100 @@ public class SplayTree<T extends Comparable<T>> {
                  return; //no splay needed -- access already at root
 
             //case 1
+            if(root.left != null)
             if(root.left.key == key){
                root = rotateRight(root);
                return;
             }
 
+            if(root.right != null)
             if(root.right.key == key){
                 root = rotateLeft(root);
                 return;
              }
-             
-            splay(root, key);
+
+             //case 2
+             if(root.left.left != null)
+             if(root.left.left.key == key){
+                root = rotateRight(root);
+               
+                return;
+             }
+ 
+             if(root.right.right != null)
+             if(root.right.right.key == key){
+                 root = rotateLeft(root);
+              
+                 return;
+              }
+
+              //case 3
+              TreeNode<T> rotateMe = getSuccessor(key);
+              
+              if(rotateMe.left.key == key){
+                getSuccessor(rotateMe.key).right = rotateMe.left;
+                rotateMe = rotateRight(rotateMe);
+                return;
+            }
+
+            if(rotateMe.right.key == key){
+                getSuccessor(rotateMe.key).left = rotateMe.right;
+                rotateMe = rotateLeft(rotateMe);
+                return;
+            }
+
+              
         }
     }
 
-    public TreeNode<T> splay(TreeNode<T> root, T key) 
-    { 
-        if (root == null){
+public TreeNode<T> getSuccessor(T key) {
+        // Your code here...
+        if(! contains(key)){ //If the given key does not exist return null.
+            return null;
+        } 
+
+        if (root.key == key){ //If the given key does not have a successor, return null.
             return null;
         }
 
-        if (root.key.compareTo(key) == 1) //left subtree
-            { 
-                if(root.left.key == key){
-                    root = rotateRight(root);
-                    return null;
-                 }
-     
-                 if(root.right.key == key){
-                     root = rotateLeft(root);
-                     return null;
-                  }
-
-                    return splay(root.left, key);
+        TreeNode<T> Transverse = root;
+        while(Transverse != null){
+            if(Transverse.left != null){
+                if(Transverse.left.key == key){
+                    return Transverse;
                 }
-             
-        else // Key lies in right subtree 
-            { 
-
-                 if(root.left.key == key){
-               root = rotateRight(root);
-               return null;
             }
 
-            if(root.right.key == key){
-                root = rotateLeft(root);
-                return null;
-             }
-
-                    return splay(root.right, key);
+            if(Transverse.right != null){
+                if(Transverse.right.key == key){
+                    return Transverse;
                 }
-} 
+            }
+
+            if(Transverse.key.compareTo(key) == 1){
+                Transverse = Transverse.left;
+            } else {Transverse = Transverse.right;}
+        }
+
+        return null;
+
+    }
+    
 
 
     // right rotate
     private TreeNode<T> rotateRight(TreeNode<T> h) {
-        TreeNode<T> x = h.left;
-        h.left = x.right;
+        TreeNode<T> x = h.left; 
+        h.left = x.right; 
         x.right = h;
-        return x;
+        return x; 
     }
 
     // left rotate
     private TreeNode<T> rotateLeft(TreeNode<T> h) {
-        TreeNode<T> x = h.right;
-        h.right = x.left;
-        x.left = h;
+        TreeNode<T> x = h.right; 
+        h.right = x.left;  
+        x.left = h; 
         return x;
     }
 
