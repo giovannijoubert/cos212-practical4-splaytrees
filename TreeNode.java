@@ -1,7 +1,7 @@
 /**
- * Name:
+ * Name: Giovanni Joubert
  * 
- * Student Number:
+ * Student Number: u18009035
  */
 public class TreeNode<T extends Comparable<T>> {
     public T key;
@@ -10,6 +10,9 @@ public class TreeNode<T extends Comparable<T>> {
 
     public TreeNode(T key) {
         // Your Code here...
+        this.key = key;
+        left = null;
+        right = null;
     }
 
     /**

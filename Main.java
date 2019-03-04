@@ -1,7 +1,7 @@
 /**
- * Name:
+ * Name: Giovanni Joubert
  * 
- * Student Number:
+ * Student Number: u18009035
  */
 
 /**
@@ -53,22 +53,29 @@ public class Main {
         tree.insert(30);
         tree.insert(5);
         tree.insert(15);
+        tree.insert(2);
+        tree.insert(7);
 
         assertEquals(tree.root.key, 20);
         assertEquals(tree.root.right.key, 30);
         assertEquals(tree.root.left.key, 10);
         assertEquals(tree.root.left.left.key, 5);
         assertEquals(tree.root.left.right.key, 15);
+        assertEquals(tree.root.left.left.left.key, 2);
+        assertEquals(tree.root.left.left.right.key, 7);
 
         endTestCase();
 
+
         startTestCase("Splaying 'ZIG' case");
         // Tests the access function
-        tree.access(10);
+        tree.access(5);
 
         assertEquals(tree.root.key, 10);
         assertEquals(tree.root.left.key, 5);
         assertEquals(tree.root.right.key, 20);
+        assertEquals(tree.root.left.left.key, 2);
+        assertEquals(tree.root.left.right.key, 7);
         assertEquals(tree.root.right.left.key, 15);
         assertEquals(tree.root.right.right.key, 30);
 
