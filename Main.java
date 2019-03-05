@@ -1,7 +1,7 @@
 /**
- * Name: Giovanni Joubert
+ * Name:
  * 
- * Student Number: u18009035
+ * Student Number:
  */
 
 /**
@@ -45,7 +45,93 @@ public class Main {
 
         SplayTree<Integer> tree = new SplayTree<>();
 
-        startTestCase("Create tree with 'ZIG' structure");
+        startTestCase("Create tree with 'CASE 1' structure");
+        // Tests the insert function
+
+        tree.insert(20);
+        tree.insert(10);
+        tree.insert(30);
+        tree.insert(5);
+        tree.insert(15);
+
+        assertEquals(tree.root.key, 20);
+        assertEquals(tree.root.right.key, 30);
+        assertEquals(tree.root.left.key, 10);
+        assertEquals(tree.root.left.left.key, 5);
+        assertEquals(tree.root.left.right.key, 15);
+
+        endTestCase();
+
+        startTestCase("Splaying 'CASE 1' case");
+        // Tests the access function
+        tree.access(10);
+
+        assertEquals(tree.root.key, 10);
+        assertEquals(tree.root.left.key, 5);
+        assertEquals(tree.root.right.key, 20);
+        assertEquals(tree.root.right.left.key, 15);
+        assertEquals(tree.root.right.right.key, 30);
+
+        endTestCase();
+
+
+        tree = new SplayTree<>();
+
+        startTestCase("Create tree with 'CASE 2' structure");
+        // Tests the insert function
+
+        tree.insert(170);
+        tree.insert(160);
+        tree.insert(200);
+        tree.insert(150);
+        tree.insert(165);
+        tree.insert(150);
+        tree.insert(140);
+        tree.insert(155);
+        tree.insert(130);
+        tree.insert(145);
+        tree.insert(135);
+        tree.insert(120);
+
+        assertEquals(tree.root.key, 170);
+        assertEquals(tree.root.right.key, 200);
+        assertEquals(tree.root.left.key, 160);
+        assertEquals(tree.root.left.right.key, 165);
+        assertEquals(tree.root.left.left.key, 150);
+        assertEquals(tree.root.left.left.right.key, 155);
+        assertEquals(tree.root.left.left.left.key, 140);
+        assertEquals(tree.root.left.left.left.right.key, 145);
+        assertEquals(tree.root.left.left.left.left.key, 130);
+        assertEquals(tree.root.left.left.left.left.right.key, 135);
+        assertEquals(tree.root.left.left.left.left.left.key, 120);
+        
+        
+
+        endTestCase();
+
+        startTestCase("Splaying 'CASE 2' case");
+        // Tests the access function
+        tree.access(130);
+
+        assertEquals(tree.root.key, 160);
+        assertEquals(tree.root.right.key, 170);
+        assertEquals(tree.root.right.right.key, 200);
+        assertEquals(tree.root.right.left.key, 165);
+        assertEquals(tree.root.left.key, 140);
+        assertEquals(tree.root.left.right.key, 150);
+        assertEquals(tree.root.left.right.right.key, 155);
+        assertEquals(tree.root.left.right.left.key, 145);
+        assertEquals(tree.root.left.left.key, 130);
+        assertEquals(tree.root.left.left.left.key, 120);
+        assertEquals(tree.root.left.left.right.key, 135);
+    
+
+        endTestCase();
+
+
+        tree = new SplayTree<>();
+
+        startTestCase("Create tree with 'CASE 3' structure");
         // Tests the insert function
 
         tree.insert(20);
@@ -59,27 +145,32 @@ public class Main {
         assertEquals(tree.root.key, 20);
         assertEquals(tree.root.right.key, 30);
         assertEquals(tree.root.left.key, 10);
-        assertEquals(tree.root.left.left.key, 5);
         assertEquals(tree.root.left.right.key, 15);
-        assertEquals(tree.root.left.right.left.key, 12);
+        assertEquals(tree.root.left.left.key, 5);
         assertEquals(tree.root.left.right.right.key, 18);
+        assertEquals(tree.root.left.right.left.key, 12);
+
+        
+        
 
         endTestCase();
 
-
-        startTestCase("Splaying 'ZIG' case");
+        startTestCase("Splaying 'CASE 3' case");
         // Tests the access function
         tree.access(15);
 
-        assertEquals(tree.root.key, 20);
-        assertEquals(tree.root.left.key, 15);
-        assertEquals(tree.root.right.key, 30);
-        assertEquals(tree.root.left.left.key, 10);
-        assertEquals(tree.root.left.right.key, 18);
-        assertEquals(tree.root.left.left.left.key, 5);
-        assertEquals(tree.root.left.left.right.key, 12);
+        assertEquals(tree.root.key, 15);
+        assertEquals(tree.root.right.key, 20);
+        assertEquals(tree.root.left.key, 10);
+        assertEquals(tree.root.left.right.key, 12);
+        assertEquals(tree.root.left.left.key, 5);
+        assertEquals(tree.root.right.right.key, 30);
+        assertEquals(tree.root.right.left.key, 18);
 
         endTestCase();
+
+        System.out.println(tree.findSuccessor(30));
+
     }
 
     public static Integer testCounter = 0;

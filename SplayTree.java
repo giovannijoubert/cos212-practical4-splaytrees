@@ -25,7 +25,7 @@ public class SplayTree<T extends Comparable<T>> {
 	{
 		if (root == null)
 			return false;
-		if (root.key == key)
+		if (root.key.equals(key))
 			return true;
 		
 		if(root.key.compareTo(key) == 1)
@@ -71,38 +71,55 @@ public class SplayTree<T extends Comparable<T>> {
      * If the given key does not exist return null.
      * If the given key does not have a successor, return null.
      */
-    public T findSuccessor(T key) {
-        // Your code here...
-        if(! contains(key)){ //If the given key does not exist return null.
-            return null;
-        } 
 
-        if (root.key == key){ //If the given key does not have a successor, return null.
-            return null;
+
+    public TreeNode<T> Minm(TreeNode<T>  root)
+    {
+        while (root.left != null) {
+            root = root.left;
         }
-
-        TreeNode<T> Transverse = root;
-        while(Transverse != null){
-            if(Transverse.left != null){
-                if(Transverse.left.key == key){
-                    return Transverse.key;
-                }
-            }
-
-            if(Transverse.right != null){
-                if(Transverse.right.key == key){
-                    return Transverse.key;
-                }
-            }
-
-            if(Transverse.key.compareTo(key) == 1){
-                Transverse = Transverse.left;
-            } else {Transverse = Transverse.right;}
-        }
-
-        return null;
-
+ 
+        return root;
     }
+  
+
+    public T findSuccessor(T key) {
+        if(! contains(key)){
+            return null; 
+        }
+        if(findSuccessor(root, null, key) == null){
+            return null;
+        } else {
+            return findSuccessor(root, null, key).key;
+        }
+    }
+
+    public TreeNode<T> findSuccessor(TreeNode<T>  root, TreeNode<T>  suc, T key)
+    {
+        if (root == null) {
+            return suc;
+        }
+ 
+        if (root.key.equals(key))
+        {
+            if (root.right != null) {
+                return Minm(root.right);
+            }
+        }
+
+        else if (key.compareTo(root.key) < 0)
+        {
+            suc = root;
+            return findSuccessor(root.left, suc, key);
+        }
+        else {
+            return findSuccessor(root.right, suc, key);
+        }
+ 
+        return suc;
+    }
+
+
 
     /**
      * Move the accessed key closer to the root using the semi-splaying strategy.
@@ -113,55 +130,111 @@ public class SplayTree<T extends Comparable<T>> {
         if(!contains(key)){ // If the key does not exist, insert it without splaying
             insert(key);
         } else {
-            if (root.key == key) 
-                 return; //no splay needed -- access already at root
+        
 
-            //case 1
-            if(root.left != null)
-            if(root.left.key == key){
-               root = rotateRight(root);
-               return;
-            }
-
-            if(root.right != null)
-            if(root.right.key == key){
-                root = rotateLeft(root);
-                return;
-             }
-
-             //case 2
-             if(root.left.left != null)
-             if(root.left.left.key == key){
-                root = rotateRight(root);
-               
-                return;
-             }
- 
-             if(root.right.right != null)
-             if(root.right.right.key == key){
-                 root = rotateLeft(root);
-              
-                 return;
-              }
-
-              //case 3
-              TreeNode<T> rotateMe = getSuccessor(key);
-              
-              if(rotateMe.left.key == key){
-                getSuccessor(rotateMe.key).right = rotateMe.left;
-                rotateMe = rotateRight(rotateMe);
-                return;
-            }
-
-            if(rotateMe.right.key == key){
-                getSuccessor(rotateMe.key).left = rotateMe.right;
-                rotateMe = rotateLeft(rotateMe);
-                return;
-            }
-
+            splay(root, key);
               
         }
     }
+
+    public TreeNode<T> splay(TreeNode<T> node, T key){
+
+        if (node == null)
+            return null;
+
+        if (this.root.key.equals(key)) 
+            return null; //no splay needed -- access already at root
+
+        //case 1
+        if(node.left != null)
+        if(this.root == node && node.left.key.equals(key)){
+            this.root = rotateRight(node);
+           return null;
+        }
+
+        if(node.right != null)
+        if(this.root == node && node.right.key.equals(key)){
+            this.root = rotateLeft(node);
+            return null;
+         }
+         //case 2
+
+         T savekey;
+
+         TreeNode<T> parent = getSuccessor(key);
+         if (parent != null){
+            TreeNode<T> grandparent = getSuccessor(parent.key);
+
+        if(grandparent.left != null && parent.left != null) {
+         if(grandparent.left == parent && parent.left.key.equals(key)){
+            savekey = parent.key;
+
+            if(getSuccessor(grandparent.key) != null){
+                getSuccessor(grandparent.key).left = parent;
+            } 
+            
+             rotateRight(grandparent);
+             if(this.root.key.equals(grandparent.key)){
+                 root = parent;
+                 return null;
+             } else {
+             splay(node, savekey);
+             }
+             
+         }
+        }
+
+        if(grandparent.right != null && parent.right != null) {
+        if (grandparent.right == parent && parent.right.key.equals(key)) {
+            savekey = parent.key;
+            if(getSuccessor(grandparent.key) != null){
+                getSuccessor(grandparent.key).right = parent;
+            } 
+
+             rotateLeft(grandparent);
+             if(this.root.key.equals(grandparent.key)){
+                 root = parent;
+                 return null;
+             } else {
+             splay(node, savekey);
+             }
+            
+         }
+        }
+
+        }
+        
+
+          //case 3
+         parent = getSuccessor(key);
+         if (parent != null){
+            TreeNode<T> grandparent = getSuccessor(parent.key);
+            if(grandparent!= null) {
+                if(grandparent.left == parent && parent.right.key.equals(key)){
+                    grandparent.left = parent.right;
+                    rotateLeft(parent);
+                    splay(node, key);
+                }
+                if(grandparent.right == parent && parent.left.key.equals(key)){
+                    grandparent.right = parent.left;
+                    rotateRight(parent);
+                    splay(node, key);
+                }
+
+            }
+        }
+
+
+          
+          
+
+
+
+          return null;
+         
+    }
+
+   
 
 public TreeNode<T> getSuccessor(T key) {
         // Your code here...
@@ -169,20 +242,20 @@ public TreeNode<T> getSuccessor(T key) {
             return null;
         } 
 
-        if (root.key == key){ //If the given key does not have a successor, return null.
+        if (root.key.equals(key)){ //If the given key does not have a successor, return null.
             return null;
         }
 
         TreeNode<T> Transverse = root;
         while(Transverse != null){
             if(Transverse.left != null){
-                if(Transverse.left.key == key){
+                if(Transverse.left.key.equals(key)){
                     return Transverse;
                 }
             }
 
             if(Transverse.right != null){
-                if(Transverse.right.key == key){
+                if(Transverse.right.key.equals(key)){
                     return Transverse;
                 }
             }
